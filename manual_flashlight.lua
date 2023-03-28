@@ -1,11 +1,11 @@
+local key_name = "X"
+
 local keyboard_singleton = sdk.get_native_singleton("via.hid.Keyboard")
 local keyboard_typedef = sdk.find_type_definition("via.hid.Keyboard")
 local keyboardkey_typedef = sdk.find_type_definition("via.hid.KeyboardKey")
 local light_switch_zone_manager = sdk.get_managed_singleton("chainsaw.LightSwitchZoneManager")
-
 local light_state = false
 local player_id = 100000
-local key_name = "X"
 
 local function prevent_auto_switch(args)
     local id = sdk.to_int64(args[3])
