@@ -4,21 +4,25 @@ local keyboardkey_typedef = sdk.find_type_definition("via.hid.KeyboardKey")
 local light_switch_zone_manager = sdk.get_managed_singleton("chainsaw.LightSwitchZoneManager")
 
 local light_state = false
-local allow_change = false
 local player_id = 100000
 local key_name = "X"
 
 local function prevent_auto_switch(args)
     local id = sdk.to_int64(args[3])
-    if not allow_change and id == player_id then
+    if id == player_id
         return sdk.PreHookResult.SKIP_ORIGINAL
     end
-    allow_change = false
 end
 
 sdk.hook(
-    light_switch_zone_manager.notifyLightSwitch,
-    prevent_auto_switch,
+    light_switch_zone_manager.registerOnLightSwitch,
+    prevent_auto_switch
+    function(x) return x end
+)
+
+sdk.hook(
+    light_switch_zone_manager.registerOffLightSwitch,
+    prevent_auto_switch
     function(x) return x end
 )
 
@@ -27,7 +31,6 @@ re.on_frame(function()
     local test = kb:call("isRelease", keyboardkey_typedef:get_field(key_name):get_data(nil))
 
     if test then
-        allow_change = true
         light_state = not light_state
         light_switch_zone_manager:notifyLightSwitch(player_id, light_state)
     end
