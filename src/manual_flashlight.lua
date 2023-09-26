@@ -11,7 +11,10 @@ local allow_change = false
 
 local function get_player_id()
     player = character_manager:call("getPlayerContextRef")
-    return player:get_field("<KindID>k__BackingField")
+    if player ~= nil then
+        return player:get_field("<KindID>k__BackingField")
+    end
+    return -1
 end
 
 local function prevent_auto_switch(args)
@@ -33,8 +36,12 @@ re.on_frame(function()
     local isButtonRelease = kb:call("isRelease", keyboardkey_typedef:get_field(key_name):get_data(nil))
 
     if isButtonRelease then
+        id = get_player_id()
+        if id == -1 then
+            return
+        end
         allow_change = true
         light_state = not light_state
-        light_switch_zone_manager:notifyLightSwitch(get_player_id(), light_state)
+        light_switch_zone_manager:notifyLightSwitch(id, light_state)
     end
 end)
