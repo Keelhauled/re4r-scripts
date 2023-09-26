@@ -4,14 +4,19 @@ local keyboard_singleton = sdk.get_native_singleton("via.hid.Keyboard")
 local keyboard_typedef = sdk.find_type_definition("via.hid.Keyboard")
 local keyboardkey_typedef = sdk.find_type_definition("via.hid.KeyboardKey")
 local light_switch_zone_manager = sdk.get_managed_singleton("chainsaw.LightSwitchZoneManager")
+local character_manager = sdk.get_managed_singleton("chainsaw.CharacterManager")
 
 local light_state = false
 local allow_change = false
-local player_id = 100000
+
+local function get_player_id()
+    player = character_manager:call("getPlayerContextRef")
+    return player:get_field("<KindID>k__BackingField")
+end
 
 local function prevent_auto_switch(args)
     local id = sdk.to_int64(args[3])
-    if not allow_change and id == player_id then
+    if not allow_change and id == get_player_id() then
         return sdk.PreHookResult.SKIP_ORIGINAL
     end
     allow_change = false
@@ -30,6 +35,6 @@ re.on_frame(function()
     if isButtonRelease then
         allow_change = true
         light_state = not light_state
-        light_switch_zone_manager:notifyLightSwitch(player_id, light_state)
+        light_switch_zone_manager:notifyLightSwitch(get_player_id(), light_state)
     end
 end)
