@@ -44,9 +44,9 @@ sdk.hook(
 
 re.on_frame(function()
     local kb_button_release = kb:call("isRelease", kb_button_data)
-    local gb_button_release = gp:call("isRelease", gp_button_data)
+    local gp_button_release = gp:call("isRelease", gp_button_data)
 
-    if kb_button_release or gb_button_release then
+    if kb_button_release or gp_button_release then
         id = get_player_id()
         if id == -1 then
             return
