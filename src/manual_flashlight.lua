@@ -1,5 +1,5 @@
 local keyboard_key_name = "X"
-local gamepad_key_name = "RStickPush"
+local gamepad_key_name = "RStickPush" -- set to "None" to disable
 
 
 local keyboard_singleton = sdk.get_native_singleton("via.hid.Keyboard")
@@ -23,7 +23,10 @@ local allow_change = false
 local function get_player_id()
     player = character_manager:call("getPlayerContextRef")
     if player ~= nil then
-        return player:get_field("<KindID>k__BackingField")
+        id = player:get_field("<KindID>k__BackingField")
+        if id == 100000 or id == 380000 then -- return if leon or ada
+            return id
+        end
     end
     return -1
 end
